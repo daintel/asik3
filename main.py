@@ -63,40 +63,23 @@ class DataAnalyser:
         self.result = {}
 
     def analyse(self):
-        print("-----------------------------")
-        print("Lambda / Map / Filter")
-        print("-----------------------------")
-
-        gpa_values = list(map(lambda s: float(s['GPA']), self.students))
-
-        print(f"GPA values (first 5) : {gpa_values[:5]}")
-
-        high_gpa = list(filter(lambda s: float(s['GPA']) > 3.8, self.students))
-        print(f"GPA > 3.8 : {len(high_gpa)}")
-
-        hard_workers = list(
-            filter(lambda s: float(s['study_hours_per_day']) > 4, self.students)
-        )
-
-        print(f"study_hours_per_day > 4 : {len(hard_workers)}")
-
-        print("-----------------------------")
-
-        if not gpa_values:
-            print("No valid GPA data")
-            return {}
-
+        gpas = []
+        count = 0
+        for row in self.students:
+            gpas.append(float(row['GPA']))
+        max_gpa = max(gpas)
+        min_gpa = min(gpas)
+        average_gpa = sum(gpas) / len(gpas)
+        for gpa in gpas:
+            if gpa > 3.5:
+                count += 1
         self.result = {
-            "Total students": len(self.students),
-            "Average GPA": round(sum(gpa_values) / len(gpa_values), 2),
-            "Max GPA": max(gpa_values),
-            "Minimum GPA": min(gpa_values),
-            "Students GPA > 3.8": len(high_gpa),
-            "Hard workers (>4h)": len(hard_workers)
+            'Total students': len(self.students),
+            "Highest GPA": max_gpa,
+            "Lowest GPA": min_gpa,
+            "Average GPA": average_gpa,
+            "Student gpa>3.5": count
         }
-
-        return self.result
-
     def print_results(self):
         print("-----------------------------")
         print("GPA Analysis")
